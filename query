@@ -1,0 +1,335 @@
+#create database
+create database stroke;
+
+#check your database that database save in your mysql server;
+show databases;
+
+#select your created database
+use stroke;
+
+#show the all records
+select * from stroke;
+
+#Find the total number of entries in the table.
+select count(*) from stroke;
+
+#Select the ID, age, marital status, and smoking status of individuals who reside in rural areas
+select id, age, ever_married, smoking_status from stroke
+where Residence_type ="Rural";
+
+#Select the ID, age, marital status, and smoking status of individuals who reside in rural areas and work as private employees.
+select id, age, ever_married, smoking_status from stroke
+where Residence_type ="Rural" and work_type="Private";
+
+#Show the patient ID, gender, and average glucose level for individuals who have never smoked, have not been affected by a stroke, and have an average glucose level between 70 and 90."
+select id, gender, avg_glucose_level
+from stroke 
+where stroke=0 and avg_glucose_level between 70 and 90 and smoking_status="never smoked";
+
+#Show the IDs of individuals with high-risk health conditions based on postprandial glucose levels, who are private employees and have experienced a stroke.
+select id from stroke
+where avg_glucose_level >200
+and work_type= "Private"
+and stroke = 1;
+
+#Find the average age of males who live in urban areas, work as self-employed, are smokers, have been affected by heart disease, and have also experienced a stroke.
+select avg(age) from stroke
+where work_type="self-employed"
+and gender="Male"
+and Residence_type="Urban"
+and smoking_status="smokes"
+and heart_disease= 1
+and stroke=1;
+
+#Find the minimum age of females who live in rural areas, work in private employment, are smokers, have not been affected by heart disease, have not experienced a stroke, and have a highly dangerous glucose level.
+select min(age) from stroke
+where gender= "Female" 
+and Residence_type= "Rural"
+and work_type ="Private"
+and smoking_status = "smokes"
+and heart_disease=0
+and stroke =0
+and avg_glucose_level >200;
+
+#Find how many females who live in urban areas, work in government employment employment, have smoked in the past, have not been affected by heart disease, have not experienced a stroke, and have a high fasting glucose level.
+select count(gender) from stroke
+where gender= "Female"
+and Residence_type= "Urban" 
+and work_type="Govt_job"
+and smoking_status="formerly smoked"
+and heart_disease=0
+and stroke=0 
+and avg_glucose_level>126;
+
+#Find the maximum age of males who live in urban areas, work in self-employment, are non-smokers, have been not affected by heart disease, have not experienced a stroke, and have a fasting glucose level indicating the starting point of pre-diabetes
+select max(age) from stroke
+where Residence_type="Urban"
+and work_type="Self-employed"
+and smoking_status= "never smoked"
+and heart_disease= 0
+and stroke= 0 
+and avg_glucose_level between 100 and 125;
+
+#Select the males who work as private employees, are affected by heart disease, or are 40 years old.
+select * from stroke 
+where gender='Male' 
+and (work_type='Private' or heart_disease=1 or age=40);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
