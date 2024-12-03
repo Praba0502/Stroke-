@@ -1,38 +1,38 @@
-#create database
+# create database
 create database stroke;
 
-#check your database that database save in your mysql server;
+# check your database that database saved in your MySQL server;
 show databases;
 
-#select your created database
+# select your created database
 use stroke;
 
 #show the all records
 select * from stroke;
 
-#Find the total number of entries in the table.
+# Find the total number of entries in the table.
 select count(*) from stroke;
 
-#Select the ID, age, marital status, and smoking status of individuals who reside in rural areas
+# Select the ID, age, marital status, and smoking status of individuals who reside in rural areas
 select id, age, ever_married, smoking_status from stroke
 where Residence_type ="Rural";
 
-#Select the ID, age, marital status, and smoking status of individuals who reside in rural areas and work as private employees.
+# Select the ID, age, marital status, and smoking status of individuals who reside in rural areas and work as private employees.
 select id, age, ever_married, smoking_status from stroke
 where Residence_type ="Rural" and work_type="Private";
 
-#Show the patient ID, gender, and average glucose level for individuals who have never smoked, have not been affected by a stroke, and have an average glucose level between 70 and 90."
+# Show the patient ID, gender, and average glucose level for individuals who have never smoked, have not been affected by a stroke, and have an average glucose level between 70 and 90."
 select id, gender, avg_glucose_level
 from stroke 
 where stroke=0 and avg_glucose_level between 70 and 90 and smoking_status="never smoked";
 
-#Show the IDs of individuals with high-risk health conditions based on postprandial glucose levels, who are private employees and have experienced a stroke.
+# Show the IDs of individuals with high-risk health conditions based on postprandial glucose levels, who are private employees and have experienced a stroke.
 select id from stroke
 where avg_glucose_level >200
 and work_type= "Private"
 and stroke = 1;
 
-#Find the average age of males who live in urban areas, work as self-employed, are smokers, have been affected by heart disease, and have also experienced a stroke.
+# Find the average age of males who live in urban areas, work as self-employed, are smokers, have been affected by heart disease, and have also experienced a stroke.
 select avg(age) from stroke
 where work_type="self-employed"
 and gender="Male"
@@ -41,7 +41,7 @@ and smoking_status="smokes"
 and heart_disease= 1
 and stroke=1;
 
-#Find the minimum age of females who live in rural areas, work in private employment, are smokers, have not been affected by heart disease, have not experienced a stroke, and have a highly dangerous glucose level.
+# Find the minimum age of females who live in rural areas, work in private employment, are smokers, have not been affected by heart disease, have not experienced a stroke, and have a highly dangerous glucose level.
 select min(age) from stroke
 where gender= "Female" 
 and Residence_type= "Rural"
@@ -51,17 +51,17 @@ and heart_disease=0
 and stroke =0
 and avg_glucose_level >200;
 
-#Find how many females who live in urban areas, work in government employment employment, have smoked in the past, have not been affected by heart disease, have not experienced a stroke, and have a high fasting glucose level.
+# Find how many females live in urban areas, work in government employment, have smoked in the past, have not been affected by heart disease, have not experienced a stroke, and have a high fasting glucose level.
 select count(gender) from stroke
 where gender= "Female"
 and Residence_type= "Urban" 
 and work_type="Govt_job"
-and smoking_status="formerly smoked"
+and smoking_status= "formerly smoked"
 and heart_disease=0
 and stroke=0 
 and avg_glucose_level>126;
 
-#Find the maximum age of males who live in urban areas, work in self-employment, are non-smokers, have been not affected by heart disease, have not experienced a stroke, and have a fasting glucose level indicating the starting point of pre-diabetes
+# Find the maximum age of males who live in urban areas, work in self-employment, are non-smokers, have been not affected by heart disease, have not experienced a stroke, and have a fasting glucose level indicating the starting point of pre-diabetes
 select max(age) from stroke
 where Residence_type="Urban"
 and work_type="Self-employed"
@@ -70,20 +70,73 @@ and heart_disease= 0
 and stroke= 0 
 and avg_glucose_level between 100 and 125;
 
-#Select the males who work as private employees, are affected by heart disease, or are 40 years old.
+# Select the males who work as private employees, are affected by heart disease, or are 40 years old.
 select * from stroke 
 where gender='Male' 
 and (work_type='Private' or heart_disease=1 or age=40);
 
+# Find the average glucose level and average BMI for each distinct smoking status in the stroke dataset, with the results rounded to 3 decimal places
+select smoking_status, 
+round(avg(avg_glucose_level),3) as overall_glucose_level, 
+round(avg(bmi),3) as bmi_level 
+from stroke
+group by smoking_status;
+
+# Find the average glucose level and average BMI for each gender in the stroke dataset, with the results rounded to 2 decimal places
+select gender, round(avg(avg_glucose_level),2) as overall_glucose_level, 
+round(avg(bmi),2) as bmi_level 
+from stroke
+group by gender;
+
+# Find the average age for each work type in the stroke dataset, where the average age is greater than 35
+select work_type,avg(age)  from stroke
+group by work_type 
+having avg(age)>35;
+
+# Find the average age, average glucose level (rounded to 3 decimal places), and average BMI for each work type in the stroke dataset, where the average age is greater than 50
+select work_type,avg(age), 
+round(avg(avg_glucose_level),3) as overall_glucose, 
+round(avg(bmi),3)  
+from stroke
+group by work_type 
+having avg(age)>50;
+
+# Create a view named 'workers' that shows the average age, average glucose level (rounded to 2 decimal places), and average BMI for male individuals without heart disease, living in urban areas, grouped by work type, where the average age is greater than 40
+create view workers as
+select work_type,avg(age), round(avg(avg_glucose_level),3) as overall_glucose, round(avg(bmi),3)  from stroke
+where gender='Male'
+and heart_disease=0
+and Residence_type='Urban'
+group by work_type 
+having avg(age)>40;
+
+# Delete the view named 'workers' from the database.
+drop view workers;
 
 
+(
+#Create a trigger that records the details (id, gender, work type, residency type, and time) of a row before it is deleted from the stroke table, specifically when the bmi is 'N/A', and inserts these details into the smoke table
 
+create table smoke( id int, gender varchar(50), 
+work_type varchar(100), 
+Residence_type varchar(50), 
+atime datetime, key(id));
 
+delimiter //
+create trigger smoke
+before delete on stroke
+for each row
+begin
+	insert into smoke(id, gender, work_type , Residence_type, atime)
+    values(old.id, old.gender, old.work_type, old.Residence_type, now());
+end;
+//
+delimiter ;
 
+delete from stroke
+where bmi="N/A"; 
 
-
-
-
+)
 
 
 
