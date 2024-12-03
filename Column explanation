@@ -1,0 +1,46 @@
+id: Unique identifier for each patient.
+Data Type: Integer
+Example: 9046
+
+gender: Gender of the patient.
+Data Type: Object (string)
+Example: Male, Female
+
+age: Age of the patient in years.
+Data Type: Float (possibly integer for ages, but float due to data formatting)
+Example: 67.0
+
+hypertension: Indicates if the patient has hypertension (1 for yes, 0 for no).
+Data Type: Integer
+Example: 0
+
+heart_disease: Indicates if the patient has heart disease (1 for yes, 0 for no).
+Data Type: Integer
+Example: 1
+
+ever_married: Indicates if the patient has ever been married (Yes, No).
+Data Type: Object (string)
+Example: Yes
+
+work_type: Type of employment of the patient.
+Data Type: Object (string)
+Example: Private, Self-employed
+
+Residence_type: Indicates if the patient resides in a rural or urban area.
+Data Type: Object (string)
+Example: Urban, Rural
+
+avg_glucose_level: Average glucose level in the blood.
+Data Type: Float
+Example: 228.69
+
+bmi: Body Mass Index (BMI) of the patient.
+Data Type: Float
+Example: 36.6
+
+smoking_status: Smoking habits of the patient.
+Data Type: Object (string)
+Categories: formerly smoked, never smoked, smokes, Unknown
+
+stroke: Indicates if the patient has experienced a stroke (1 for yes, 0 for no).
+Data Type: Integer
