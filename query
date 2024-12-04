@@ -10,6 +10,9 @@ use stroke;
 #show the all records
 select * from stroke;
 
+#Write a query to describe the structure of the stroke table. The query should display the table's columns, data types, and other attributes such as whether the columns allow NULL values, their default values, and key constraints.
+describe stroke;
+
 # Find the total number of entries in the table.
 select count(*) from stroke;
 
@@ -163,11 +166,22 @@ end;
  where smoking_status='formerly smoked';
 )
 
-
-
-
-
-
+(
+create a trigger. The trigger should perform the following actions before any update:
+If the NEW.bmi value is greater than 40.4, it should automatically be set to 35.5.
+If the NEW.hypertension value equals 1, it should automatically be set to 0.5.
+delimiter //
+create trigger bounce before update on stroke
+for each row
+begin
+if new.bmi>40.4 then
+set new.bmi=35.5;
+elseif new.hypertension=1 then
+set new.hypertension=0.5;
+end if;
+end //
+delimiter ;
+)
 
 
 
