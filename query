@@ -114,6 +114,7 @@ having avg(age)>40;
 drop view workers;
 
 
+
 (
 #Create a trigger that records the details (id, gender, work type, residency type, and time) of a row before it is deleted from the stroke table, specifically when the bmi is 'N/A', and inserts these details into the smoke table
 
@@ -138,12 +139,29 @@ where bmi="N/A";
 
 )
 
+(
+Create a table updation with the following columns:
 
+id (INT), gender (VARCHAR), action (VARCHAR), atime (DATETIME). Write a trigger update to log details into updation after any update on the stroke table:
+Log the id, gender (before the update), the message 'updation was success', and the current timestamp (NOW()).
+Update the smoking_status in the stroke table: Change all values from 'formerly smoked' to 'smoked in past'.
 
+code:
+ create table updation(id int, gender varchar(100),action varchar(100), atime datetime);
 
+delimiter //
+create trigger updated
+after update on stroke
+for each row
+begin
+insert into  updation(id, gender, action, atime)
+values(old.id, old.gender, 'update was successful', now());
+end;
+//
 
-
-
+ update stroke set smoking_status = 'smoked in past'
+ where smoking_status='formerly smoked';
+)
 
 
 
