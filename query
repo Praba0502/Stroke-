@@ -91,6 +91,16 @@ round(avg(bmi),2) as bmi_level
 from stroke
 group by gender;
 
+# Write a query that retrieves the minimum age for each smoking_status from the stroke table. where the following conditions are met: The patient has not experienced a stroke. 
+The patient is older than 20 years. The patient does not have heart disease. The query should group the results by smoking_status and return the minimum age for each smoking category.
+code:
+select smoking_status, min(age) from stroke
+where stroke=0
+and age>20
+and heart_disease=0
+group by smoking_status;
+
+
 # Find the average age for each work type in the stroke dataset, where the average age is greater than 35
 select work_type,avg(age)  from stroke
 group by work_type 
@@ -116,7 +126,17 @@ having avg(age)>40;
 # Delete the view named 'workers' from the database.
 drop view workers;
 
-
+#Write a query to retrieve the id, gender, age, work_type, and Residence_type from the stroke table. Create a new column called overall_health, which classifies the patient's health as follows:
+Label as 'critical_level' if the avg_glucose_level is greater than 126, or bmi is greater than 40, or the patient has a stroke (stroke = 1), or has both heart disease (heart_disease = 1) and hypertension (hypertension = 1).
+Label as 'normal' if none of these conditions are met.
+code:
+select id, gender, age, work_type, Residence_type,
+case
+	when 
+		avg_glucose_level>126 or bmi>40 or stroke= 1 or heart_disease=1 and hypertension= 1 then 'critical_level'
+    else 'normal'
+end as overall_health 
+from stroke;
 
 (
 #Create a trigger that records the details (id, gender, work type, residency type, and time) of a row before it is deleted from the stroke table, specifically when the bmi is 'N/A', and inserts these details into the smoke table
@@ -139,13 +159,12 @@ delimiter ;
 
 delete from stroke
 where bmi="N/A"; 
-
 )
 
 (
-Create a table updation with the following columns:
+#Create a table updation with the following columns:
 
-id (INT), gender (VARCHAR), action (VARCHAR), atime (DATETIME). Write a trigger update to log details into updation after any update on the stroke table:
+#id (INT), gender (VARCHAR), action (VARCHAR), atime (DATETIME). Write a trigger update to log details into updation after any update on the stroke table:
 Log the id, gender (before the update), the message 'updation was success', and the current timestamp (NOW()).
 Update the smoking_status in the stroke table: Change all values from 'formerly smoked' to 'smoked in past'.
 
@@ -170,6 +189,7 @@ end;
 create a trigger. The trigger should perform the following actions before any update:
 If the NEW.bmi value is greater than 40.4, it should automatically be set to 35.5.
 If the NEW.hypertension value equals 1, it should automatically be set to 0.5.
+code:
 delimiter //
 create trigger bounce before update on stroke
 for each row
